@@ -1,36 +1,16 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Plumbing Website Template Engine\n\nThis project is a scalable template engine for local service businesses, specifically designed for plumbing websites built with Next.js 14 and Tailwind CSS. The goal is to allow for easy creation and updating of multiple website instances from a central template by modifying a `siteConfig.ts` file.\n\n## Features\n\n- **Template-driven Configuration:** Customize site content and appearance via a single `src/config/siteConfig.ts` file.\n- **Modular Component Architecture:** Reusable React components designed for flexibility.\n- **Dynamic Service Pages:** Automatically generate pages for each service defined in `siteConfig.ts`.\n- **CLI Tools:** Automate the creation and updating of website instances.\n  - `create-plumbing-site`: Create a new website instance from the template with guided configuration.\n  - `update-plumbing-sites`: Batch update multiple existing website instances from the template.\n- **SEO Ready:** Includes components for dynamic metadata and JSON-LD schema markup.\n- **Responsive Design:** Built with Tailwind CSS for a mobile-first approach.\n\n## Getting Started\n\nTo get a local copy up and running follow these simple steps.\n\n### Prerequisites\n\n- Node.js (v18 or later)\n- npm or yarn\n- Git\n\n### Installation\n\n1.  **Clone the repository:**\n
+    ```bash\n    git clone <repository_url>\n    cd plumbing\n    ```\n\n2.  **Install dependencies:**\n
+    ```bash\n    npm install\n    ```\n\n3.  **Build the CLI tools:**\n
+    Navigate to the `scripts` directory and build the TypeScript files.\n
+    ```bash\n    cd scripts\n    npm run build\n    ```\n\n4.  **Install CLI tools globally (Recommended):**\n\n    This allows you to run the CLI commands from any directory.\n
+    On Windows, the global npm package directory might not be in your PATH. To find the directory, run:\n
+    ```powershell\n    npm config get prefix\n    ```\n
+    The output will be a path like `C:\Users\YourUsername\AppData\Roaming\npm`. You need to add this directory to your system's PATH environment variable. You can do this manually through System Properties > Environment Variables, or use the provided PowerShell script:\n
+    ```powershell\n    ./scripts/setup-path.ps1\n    ```\n
+    You may need to restart your terminal session for the changes to take effect.\n
+    Once the npm global bin directory is in your PATH, install the CLI tools globally from the `scripts` directory:\n
+    ```bash\n    cd scripts\n    npm install -g .\n    ```\n
+    On macOS/Linux, running `npm install -g .` from the `scripts` directory should be sufficient, as the npm global bin is usually already in the PATH.\n\n5.  **Verify installation:**\n
+    Open a new terminal session and run:\n
+    ```bash\n    create-plumbing-site --help\n    update-plumbing-sites --help\n    ```\n\n    You should see the help information for both commands.\n
+## Usage\n\n### Creating a New Site Instance (`create-plumbing-site`)\n\nUse the `create-plumbing-site` command to generate a new website instance in a specified directory.\n\n```bash\ncreate-plumbing-site <site-name> [options]\n```\n\n-   `<site-name>`: A unique name for the new site (lowercase, hyphenated, e.g., `my-plumbing-site`). This will be the name of the directory created for the site.\n\n**Options:**\n\n-   `-d, --dir <directory>`: Specifies the target directory where the new site folder will be created. Defaults to the current working directory if not specified.\n-   `-v, --verbose`: Enable verbose logging to see detailed information during the site creation process, useful for debugging.\n\n**Interactive Configuration:**\n\nAfter running the command, you will be guided through a series of prompts to configure the new site based on a chosen template. You can select from predefined templates (Residential, Commercial, Emergency) and provide specific details for the business.\n\nExample:\n\n```bash\ncreate-plumbing-site family-plumbing --dir /path/to/your/websites\n```\n\nThis will create a new directory `/path/to/your/websites/family-plumbing` and populate it with the template code and a generated `siteConfig.ts` based on your inputs and the selected template.\n\n### Updating Existing Site Instances (`update-plumbing-sites`)\n\nUse the `update-plumbing-sites` command to apply updates from the template repository to one or more existing website instances.\n\n```bash\nupdate-plumbing-sites <base-dir> <template-dir> [options]\n```\n\n-   `<base-dir>`: The base directory that contains your website instances (e.g., `/path/to/your/websites`). The CLI will search for directories within this base directory that appear to be plumbing website instances.\n-   `<template-dir>`: The directory containing the latest version of the plumbing template code (e.g., the path to your cloned template repository).\n\n**Options:**\n\n-   `-d, --dry-run`: Perform a dry run. The CLI will show which files would be copied or overwritten without making any actual changes. This is highly recommended before performing an actual update.\n-   `-v, --verbose`: Enable verbose logging to see detailed information during the update process, including which files are being copied or skipped and details about potential conflicts.\n\n**Batch Update Process:**\n\n1.  The CLI scans the `<base-dir>` for potential website instances (directories containing a `package.json` with a name including `plumbing-website`).\n2.  It lists the identified sites and asks for confirmation before proceeding.\n3.  For each confirmed site:\n    -   A backup of the current site files is created (unless `--dry-run` is used). Excludes `.git`, `node_modules`, `.next`, `dist`, and `backup` directories.\n    -   Core template files (`src/components`, `src/app`, `src/styles`, etc.) are copied from `<template-dir>` to the site directory.\n    -   **Conflict Detection:** If a file from the template already exists in the site and has different content, a warning is logged. In dry-run mode, the difference (diff) is shown in verbose mode. In a non-dry-run update, the template file will overwrite the existing file.\n    -   `npm install` is run in the site directory to update dependencies.\n    -   `npm run build` is run in the site directory to build the updated project.\n\nExample:\n\n```bash\nupdate-plumbing-sites /path/to/your/websites /path/to/your/plumbing-template --dry-run --verbose\n```\n\nThis command will perform a dry run of the update process for all sites in `/path/to/your/websites`, comparing them against the template in `/path/to/your/plumbing-template`, and providing verbose output including potential conflicts.\n\nTo apply the update, remove the `--dry-run` flag:\n\n```bash\nupdate-plumbing-sites /path/to/your/websites /path/to/your/plumbing-template\n```\n\n## Template Customization\n\nThe core of the template engine is the `src/config/siteConfig.ts` file. This file defines the structure and content for a plumbing website. By modifying this file, you can significantly change the website's appearance, services offered, contact information, and SEO details without altering the core components.\n\n### Predefined Templates\n\nThe `scripts/templates/` directory contains example `siteConfig.ts` files for different plumbing business profiles:\n\n-   `residential.ts`: Configuration for a residential plumbing service.\n-   `commercial.ts`: Configuration for a commercial/industrial plumbing service.\n-   `emergency.ts`: Configuration for a 24/7 emergency plumbing service.\n\nYou can use these as starting points when creating new templates or customizing existing site instances.\n\n### Creating New Templates\n\nYou can create new template files in the `scripts/templates/` directory by defining a `Partial<SiteConfig>` object. Ensure you export it and add it to the `templates` object and `TemplateType` union in `scripts/templates/index.ts`. This will make your new template available in the `create-plumbing-site` template selection wizard.\n\n## Further Enhancements (Future Work)\n\n-   **More Robust Conflict Resolution:** Implement interactive prompts during updates to decide how to handle conflicting files (e.g., view diff, keep original, overwrite).$\n-   **Advanced Input Validation:** Add more specific validation rules for different configuration fields.\n-   **Parameterized Templates:** Allow templates to accept parameters during site creation for even greater flexibility.\n-   **Configuration Migration:** Develop a system to migrate existing `siteConfig.ts` files to newer template versions if the configuration structure changes.\n-   **Dedicated UI:** Potentially create a simple web UI for managing site instances and configurations.\n\n## Contributing\n\nContributions are welcome! Please open an issue or submit a pull request.\n\n## License\n\nThis project is licensed under the MIT License.\n
