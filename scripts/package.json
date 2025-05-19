@@ -1,0 +1,31 @@
+{
+  "name": "plumbing-site-cli",
+  "version": "1.0.0",
+  "description": "CLI tool for creating and managing plumbing website instances",
+  "main": "dist/create-site.js",
+  "bin": {
+    "create-plumbing-site": "./dist/create-site.js",
+    "update-plumbing-sites": "./dist/update-sites.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/create-site.js",
+    "dev": "ts-node create-site.ts",
+    "update": "ts-node update-sites.ts",
+    "update:dry-run": "ts-node update-sites.ts --dry-run"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^8.2.6"
+  },
+  "devDependencies": {
+    "@types/diff": "^7.0.2",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^8.2.6",
+    "@types/node": "^20.11.19",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
